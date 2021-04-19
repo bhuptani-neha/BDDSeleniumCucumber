@@ -25,12 +25,17 @@ public class LoginPageSteps {
 	public void user_clicks_logout() {
 		testContext.getPageObjectManager(driver).getProfilePage().getLogOutButton().click();
 	}
-
-	@Then("Create Account Button Appears")
-	public void create_account_button_appears() {
-		assertTrue(testContext.getPageObjectManager(driver).getLoginPage().getCreateAccountButton().isDisplayed());
+	
+	@When("User Logout of the system")
+	public void user_logout_of_the_system() {
+		testContext.getPageObjectManager(driver).getProfilePage().getLogOutButton().click();
 	}
 
+	@Then("User is logged out of Profile")
+	public void user_is_logged_out_of_profile() {
+		assertTrue(testContext.getPageObjectManager(driver).getLoginPage().getCreateAccountButton().isDisplayed());
+	}
+	
 	@When("User enters a above created Email address")
 	public void user_enters_a_above_created_email_address() {
 		testContext.getPageObjectManager(driver).getLoginPage().getEmailTextField().sendKeys(testContext.getUser().getUserEmail());
@@ -71,18 +76,26 @@ public class LoginPageSteps {
 		assertTrue(testContext.getPageObjectManager(driver).getLoginPage().getAlertLabel().getText().contains(msg));
 	}
 	
-	@When("User enters {string} and {string} and clicks on Sign in Button")
+	@When("User signs in using credentials {string} and {string}")
 	public void user_enters_and_and_clicks_on_sign_in_button(String userEmail, String userPwd) {
+		
+		testContext.getPageObjectManager(driver).getHomePage().getSignInButton().click();
 		
 		if(userEmail.equals("usremail")) {
 			testContext.getPageObjectManager(driver).getLoginPage().getEmailTextField().sendKeys(UserInfo.userEmail);
-		}else {
+		}else if(userEmail.equals("usremailCreated")){
+			testContext.getPageObjectManager(driver).getLoginPage().getEmailTextField().sendKeys(testContext.getUser().getUserEmail());
+		}		
+		else {
 			testContext.getPageObjectManager(driver).getLoginPage().getEmailTextField().sendKeys(userEmail);
 		}
 		
 		if(userPwd.equals("userpwd")) {
 			testContext.getPageObjectManager(driver).getLoginPage().getPasswordTextField().sendKeys(UserInfo.userPwd);		
-		}else {
+		}else if(userPwd.equals("userpwdCreated")) {
+			testContext.getPageObjectManager(driver).getLoginPage().getPasswordTextField().sendKeys(testContext.getUser().getUserPassword());		
+		}
+		else {
 			testContext.getPageObjectManager(driver).getLoginPage().getPasswordTextField().sendKeys(userPwd);	
 		}
 		

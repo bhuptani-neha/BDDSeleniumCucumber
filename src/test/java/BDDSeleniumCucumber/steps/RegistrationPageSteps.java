@@ -59,6 +59,27 @@ public class RegistrationPageSteps {
 		testContext.getPageObjectManager(driver).getLoginPage().getCreateEmailTextField().clear();
 		testContext.getPageObjectManager(driver).getLoginPage().getCreateEmailTextField().sendKeys(newEmail);
 	}
+	
+	@When("User creates account using {string}")
+	public void user_creates_account_using(String email) {
+		
+		testContext.getPageObjectManager(driver).getHomePage().getSignInButton().click();
+		
+		assertTrue(testContext.getPageObjectManager(driver).getLoginPage().getCreateAccountButton().isDisplayed());
+		
+		String newEmail = email.substring(0, email.indexOf("@")) + new Random().nextInt(9) + new Random().nextInt(9) + new Random().nextInt(9) 
+				+  email.substring(email.indexOf("@"));
+		testContext.getUser().setUserEmail(newEmail);
+		userEmail = newEmail; 
+		testContext.getPageObjectManager(driver).getLoginPage().getCreateEmailTextField().clear();
+		testContext.getPageObjectManager(driver).getLoginPage().getCreateEmailTextField().sendKeys(newEmail);
+		
+		testContext.getPageObjectManager(driver).getLoginPage().getCreateAccountButton().click();
+		try {
+			Thread.sleep(8000);
+		} catch (InterruptedException e) {}
+	}
+
 
 	@When("Clicks on Create Account Button")
 	public void clicks_on_create_account_button() {
@@ -106,6 +127,28 @@ public class RegistrationPageSteps {
 		testContext.getUser().setUserPassword(rows.get(9).get(1));
 		userPwd = rows.get(9).get(1);
 	}
+	
+	@When("User registers with all the below information:")
+	public void user_registers_with_all_the_below_information(io.cucumber.datatable.DataTable dataTable) {
+	    
+		List<List<String>> rows = dataTable.asLists(String.class);
+		
+		testContext.getPageObjectManager(driver).getRegistrationPage().getFirstNameTextField().sendKeys(rows.get(2).get(1));
+		testContext.getPageObjectManager(driver).getRegistrationPage().getLastNameTextField().sendKeys(rows.get(3).get(1));
+		testContext.getPageObjectManager(driver).getRegistrationPage().getAddressTextField().sendKeys(rows.get(4).get(1));
+		testContext.getPageObjectManager(driver).getRegistrationPage().getCityTextField().sendKeys(rows.get(5).get(1));
+		testContext.getPageObjectManager(driver).getRegistrationPage().getStateDropdown().selectByVisibleText(rows.get(6).get(1));
+		testContext.getPageObjectManager(driver).getRegistrationPage().getPostalCodeTextField().sendKeys(rows.get(7).get(1));
+		testContext.getPageObjectManager(driver).getRegistrationPage().getNumberTextField().sendKeys(rows.get(8).get(1));
+		testContext.getPageObjectManager(driver).getRegistrationPage().getTitleRadioMrs().click();
+		testContext.getPageObjectManager(driver).getRegistrationPage().getPasswordTextField().sendKeys(rows.get(9).get(1));
+		testContext.getUser().setUserPassword(rows.get(9).get(1));
+		userPwd = rows.get(9).get(1);
+		
+		testContext.getPageObjectManager(driver).getRegistrationPage().getRegisterButton().click();
+		
+		assertEquals("MY ACCOUNT",testContext.getPageObjectManager(driver).getProfilePage().getTitle());
+	}
 
 	@When("User clicks Register")
 	public void user_clicks_register() {
@@ -115,6 +158,11 @@ public class RegistrationPageSteps {
 	@Then("User is redirected to A Profile Page with title {string}")
 	public void user_is_redirected_to_a_profile_page_with_title(String title) {
 		assertEquals(title,testContext.getPageObjectManager(driver).getProfilePage().getTitle());
+	}
+	
+	@Then("User is successfully logged in.")
+	public void user_is_successfully_logged_in() {
+		assertEquals("MY ACCOUNT",testContext.getPageObjectManager(driver).getProfilePage().getTitle());
 	}
 
 }
