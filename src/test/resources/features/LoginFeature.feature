@@ -26,41 +26,29 @@ Feature: Login Functionality
     And User enter above entered Password
     And User click on Sign In Button
     Then User is redirected to A Profile Page with title "MY ACCOUNT"
-
-
-  @CallSetup @CallTearDown
-  Scenario: Login with Wrong Password
-    Given Navigate to AutomationPractice Website HomePage
-    When User clicks on Sign in Button
-    When User enters a his Email address
-    And User enter above wrong Password "12345"
-    And User click on Sign In Button
-    Then User is given alert message "Authentication failed."
     
-    @CallSetup @CallTearDown
-  Scenario: Login with Blank Password
-    Given Navigate to AutomationPractice Website HomePage
-    When User clicks on Sign in Button
-    When User enters a his Email address
-    And User enter blank password
-    And User click on Sign In Button
-    Then User is given alert message "Password is required."
-    
-    @CallSetup @CallTearDown
-  Scenario: Login with Blank Email
-    Given Navigate to AutomationPractice Website HomePage
-    When User clicks on Sign in Button
-    When User enters blank email
-    And User enters a his Password
-    And User click on Sign In Button
-    Then User is given alert message "An email address required."
     
      @CallSetup @CallTearDown
-  Scenario: LogOut
+  Scenario Outline: Login Scenarios with Blank Email, Pwd and Wrong Pwd
+    Given Navigate to AutomationPractice Website HomePage
+    When User clicks on Sign in Button
+    When User enters <email> and <password> and clicks on Sign in Button
+    Then User is given alert <message>
+    
+     Examples: 
+      | email  | password | message  |
+      | "" |     "userpwd" | "An email address required." |
+      | "usremail" |     "" | "Password is required."    |
+      | "usremail" |     "12345" | "Authentication failed."    |
+      
+      @CallSetup @CallTearDown
+  Scenario Outline: LogOut
     Given Navigate to AutomationPractice Website HomePage
     And User clicks on Sign in Button
-    And User enters a his Email address
-    And User enters a his Password
-    And User click on Sign In Button
+    And User enters <email> and <password> and clicks on Sign in Button
     When User clicks Logout
     Then Create Account Button Appears
+    
+     Examples: 
+      | email  | password |
+      | "usremail" |     "userpwd" |

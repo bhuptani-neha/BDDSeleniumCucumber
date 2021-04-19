@@ -65,6 +65,29 @@ public class LoginPageSteps {
 	public void user_is_given_alert_message(String msg) {
 		assertTrue(testContext.getPageObjectManager(driver).getLoginPage().getAlertLabel().getText().contains(msg));
 	}
+
+	@Then("User is given alert {string}")
+	public void user_is_given_alert(String msg) {
+		assertTrue(testContext.getPageObjectManager(driver).getLoginPage().getAlertLabel().getText().contains(msg));
+	}
+	
+	@When("User enters {string} and {string} and clicks on Sign in Button")
+	public void user_enters_and_and_clicks_on_sign_in_button(String userEmail, String userPwd) {
+		
+		if(userEmail.equals("usremail")) {
+			testContext.getPageObjectManager(driver).getLoginPage().getEmailTextField().sendKeys(UserInfo.userEmail);
+		}else {
+			testContext.getPageObjectManager(driver).getLoginPage().getEmailTextField().sendKeys(userEmail);
+		}
+		
+		if(userPwd.equals("userpwd")) {
+			testContext.getPageObjectManager(driver).getLoginPage().getPasswordTextField().sendKeys(UserInfo.userPwd);		
+		}else {
+			testContext.getPageObjectManager(driver).getLoginPage().getPasswordTextField().sendKeys(userPwd);	
+		}
+		
+		testContext.getPageObjectManager(driver).getLoginPage().getSignInButton().click();
+	}
 	
 	@When("User enter blank password")
 	public void user_enter_blank_password() {
